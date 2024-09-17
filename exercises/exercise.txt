@@ -1,0 +1,13 @@
+- Create a Circle struct with a single field radius of type float64.
+- Define a circumference method on the Circle:
+    - C = 2*pi*r
+    - pi = 3.14
+- Bonus:
+    - add a method for area
+    - A = pi*r^2
+
+    1 make package main
+    2 add imports
+    3 create struct 
+    4 add 2 methods
+    5 have a func that calls methods and prints values 
