@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"lambda-func/app"
 
 	"github.com/aws/aws-lambda-go/lambda"
 )
@@ -11,9 +12,7 @@ type MyEvent struct {
 	Username string `json:"username"`
 }
 
-// simple func that takes in payload and performs some action
-// error is native type in Go
-// errors are values in go - not like try catch or exceptions like in other languages
+// handler
 func HandleRequest(event MyEvent) (string, error) {
 	if event.Username == "" {
 		return "", fmt.Errorf("username cannot be empty")
@@ -26,5 +25,6 @@ func HandleRequest(event MyEvent) (string, error) {
 // backend logic for application
 // packaged, zipped and deployed to our lambda function
 func main() {
-	lambda.Start(HandleRequest)
+	lambdaApp := app.NewApp()
+	lambda.Start(lambdaApp.ApiHandler.RegisterUserHandler)
 }

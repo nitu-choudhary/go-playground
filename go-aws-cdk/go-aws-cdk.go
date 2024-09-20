@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/aws/aws-cdk-go/awscdk/v2"
+	"github.com/aws/aws-cdk-go/awscdk/v2/awsdynamodb"
 	"github.com/aws/aws-cdk-go/awscdk/v2/awslambda"
 
 	// "github.com/aws/aws-cdk-go/awscdk/v2/awssqs"
@@ -22,17 +23,29 @@ func NewGoAwsCdkStack(scope constructs.Construct, id string, props *GoAwsCdkStac
 
 	// The code that defines your stack goes here
 
+	// dynamodb table
+	table := awsdynamodb.NewTable(stack, jsii.String("myUserTable"), &awsdynamodb.TableProps{
+		PartitionKey: &awsdynamodb.Attribute{
+			Name: jsii.String("username"),
+			Type: awsdynamodb.AttributeType_STRING,
+		},
+		TableName: jsii.String("userTable"),
+	})
+
 	// lambda resource
 	// the passed stack is going to have the following lambda function with given name and function properties
 	// every resource will have its own definition of properties
 	// runtime - what is the runtime for code? go, java, nodejs etc
 	// handler is where out code is packaged and bundled
 	// code - where and how the code is being executed?
-	awslambda.NewFunction(stack, jsii.String("goPlaygroundLambdaFunction"), &awslambda.FunctionProps{
+	myFunction := awslambda.NewFunction(stack, jsii.String("goPlaygroundLambdaFunction"), &awslambda.FunctionProps{
 		Runtime: awslambda.Runtime_PROVIDED_AL2023(),
 		Code:    awslambda.AssetCode_FromAsset(jsii.String("lambda/function.zip"), nil),
 		Handler: jsii.String("main"),
 	})
+
+	// grant permission to role that lambda function has to read and write data to table
+	table.GrantReadWriteData(myFunction)
 
 	return stack
 }
