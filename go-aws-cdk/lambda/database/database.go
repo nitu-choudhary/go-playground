@@ -12,6 +12,13 @@ const (
 	TABLE_NAME = "userTable"
 )
 
+// interfaces have very general names
+type UserStore interface {
+	// functions
+	DoesUserExist(username string) (bool, error)
+	InsertUser(user types.RegisterUser) error
+}
+
 type DynamoDBClient struct {
 	databaseStore *dynamodb.DynamoDB
 }
@@ -24,9 +31,6 @@ func NewDynamoDBClient() DynamoDBClient {
 		databaseStore: db,
 	}
 }
-
-// does this user exist?
-// how to insert a nre record into DyanmoDB
 
 func (u DynamoDBClient) DoesUserExist(username string) (bool, error) {
 	result, err := u.databaseStore.GetItem(&dynamodb.GetItemInput{

@@ -10,8 +10,7 @@ type App struct {
 }
 
 func NewApp() App {
-	// we actuall intialize out DB store
-	// gets passed down into the api handler
+	// We have decoupled db by using interface and we can use any db client here as long as the the functions in interface are implemented
 	db := database.NewDynamoDBClient()
 	apiHandler := api.NewApiHandler(db)
 
